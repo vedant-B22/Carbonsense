@@ -1,21 +1,25 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { calculateTransport, calculateEnergy, calculateLifestyle } from "@/lib/emissionFactors";
+import SimulatorSlider from "./SimulatorSlider";
 
+/**
+ * WhatIfSimulator component.
+ * Allows users to adjust hypotheticals via sliders to see real-time impact reductions.
+ * @param {Object} props - React props.
+ * @param {Object} props.footprint - Calculated carbon footprint state.
+ * @returns {React.ReactElement} The What-If simulation layout.
+ */
 export default function WhatIfSimulator({ footprint }) {
   const inputs = footprint.inputs;
-  
-  // Slider states
-  const [carReduction, setCarReduction] = useState(0); // km/week reduction
+  const [carReduction, setCarReduction] = useState(0);
   const [renewablePercent, setRenewablePercent] = useState(inputs.energy.renewablePercentage);
-  const [onlineReduction, setOnlineReduction] = useState(0); // orders/month reduction
+  const [onlineReduction, setOnlineReduction] = useState(0);
   
-  // Max ranges based on user inputs
   const maxCar = inputs.transport.carKmPerWeek || 0;
   const maxOnline = inputs.lifestyle.onlineOrdersPerMonth || 0;
 
-  // Recalculate based on simulation
   const simCarKm = Math.max(0, maxCar - carReduction);
   const simOnline = Math.max(0, maxOnline - onlineReduction);
 
@@ -23,12 +27,10 @@ export default function WhatIfSimulator({ footprint }) {
     simCarKm, inputs.transport.publicHoursPerWeek,
     inputs.transport.flightsPerYear, inputs.transport.flightClass
   );
-
   const simEnergy = calculateEnergy(
     inputs.energy.electricityKwhPerMonth, inputs.energy.gasM3PerMonth,
     renewablePercent, inputs.energy.houseSizeM2
   );
-
   const simLifestyle = calculateLifestyle(
     simOnline, inputs.lifestyle.streamingHoursPerDay,
     inputs.lifestyle.clothingPurchasesPerYear, inputs.lifestyle.recyclingHabit
@@ -51,62 +53,24 @@ export default function WhatIfSimulator({ footprint }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Slider 1 */}
         {maxCar > 0 && (
-          <div className="space-y-3">
-            <div className="flex justify-between text-xs font-semibold">
-              <label htmlFor="simCar" className="text-textMuted">Reduce Driving</label>
-              <span className="text-text font-mono">-{carReduction} km/wk</span>
-            </div>
-            <input
-              type="range"
-              id="simCar"
-              min="0"
-              max={maxCar}
-              className="w-full accent-accent bg-forestMuted cursor-pointer"
-              value={carReduction}
-              onChange={(e) => setCarReduction(Number(e.target.value))}
-            />
-            <span className="text-[10px] text-textMuted/60 block">Current: {maxCar} km/week</span>
-          </div>
-        )}
-
-        {/* Slider 2 */}
-        <div className="space-y-3">
-          <div className="flex justify-between text-xs font-semibold">
-            <label htmlFor="simRenewable" className="text-textMuted font-medium">Renewable Energy</label>
-            <span className="text-accent font-mono">{renewablePercent}%</span>
-          </div>
-          <input
-            type="range"
-            id="simRenewable"
-            min={inputs.energy.renewablePercentage}
-            max="100"
-            className="w-full accent-accent bg-forestMuted cursor-pointer"
-            value={renewablePercent}
-            onChange={(e) => setRenewablePercent(Number(e.target.value))}
+          <SimulatorSlider
+            id="simCar" label="Reduce Driving" min={0} max={maxCar} value={carReduction}
+            onChange={setCarReduction} displayValue={`-${carReduction} km/wk`}
+            currentText={`Current: ${maxCar} km/week`}
           />
-          <span className="text-[10px] text-textMuted/60 block">Current: {inputs.energy.renewablePercentage}%</span>
-        </div>
-
-        {/* Slider 3 */}
+        )}
+        <SimulatorSlider
+          id="simRenewable" label="Renewable Energy" min={inputs.energy.renewablePercentage} max={100}
+          value={renewablePercent} onChange={setRenewablePercent} displayValue={`${renewablePercent}%`}
+          currentText={`Current: ${inputs.energy.renewablePercentage}%`}
+        />
         {maxOnline > 0 && (
-          <div className="space-y-3">
-            <div className="flex justify-between text-xs font-semibold">
-              <label htmlFor="simOnline" className="text-textMuted font-medium">Reduce Online Shopping</label>
-              <span className="text-text font-mono">-{onlineReduction} orders/mo</span>
-            </div>
-            <input
-              type="range"
-              id="simOnline"
-              min="0"
-              max={maxOnline}
-              className="w-full accent-accent bg-forestMuted cursor-pointer"
-              value={onlineReduction}
-              onChange={(e) => setOnlineReduction(Number(e.target.value))}
-            />
-            <span className="text-[10px] text-textMuted/60 block">Current: {maxOnline} orders/month</span>
-          </div>
+          <SimulatorSlider
+            id="simOnline" label="Reduce Online Shopping" min={0} max={maxOnline} value={onlineReduction}
+            onChange={setOnlineReduction} displayValue={`-${onlineReduction} orders/mo`}
+            currentText={`Current: ${maxOnline} orders/month`}
+          />
         )}
       </div>
     </div>

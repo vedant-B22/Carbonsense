@@ -10,6 +10,11 @@ import EnergyStep from "./EnergyStep";
 import FoodStep from "./FoodStep";
 import LifestyleStep from "./LifestyleStep";
 
+/**
+ * CarbonForm component.
+ * Manages the multi-step calculator forms, calculates footprint scores on the fly, and routes to dashboard.
+ * @returns {React.ReactElement} The multi-step carbon calculator form wrapper.
+ */
 export default function CarbonForm() {
   const router = useRouter();
   const { footprint, updateFootprint } = useGlobalContext();
@@ -24,12 +29,10 @@ export default function CarbonForm() {
     inputs.transport.carKmPerWeek, inputs.transport.publicHoursPerWeek,
     inputs.transport.flightsPerYear, inputs.transport.flightClass
   );
-  
   const energyVal = calculateEnergy(
     inputs.energy.electricityKwhPerMonth, inputs.energy.gasM3PerMonth,
     inputs.energy.renewablePercentage, inputs.energy.houseSizeM2
   );
-  
   const foodVal = calculateFood(inputs.food.dietType, inputs.food.wasteLevel, inputs.food.localPercentage);
   const lifestyleVal = calculateLifestyle(
     inputs.lifestyle.onlineOrdersPerMonth, inputs.lifestyle.streamingHoursPerDay,
@@ -52,7 +55,7 @@ export default function CarbonForm() {
       <div className="mb-8">
         <div className="flex justify-between text-xs text-textMuted font-bold uppercase tracking-wider mb-2">
           <span>Step {step} of 4</span>
-          <span>Running Total: <span className="text-accent font-mono">{totalVal.toLocaleString()} kg CO₂/yr</span></span>
+          <span>Total: <span className="text-accent font-mono">{totalVal.toLocaleString()} kg/yr</span></span>
         </div>
         <div className="w-full h-1 bg-forestMuted rounded-full overflow-hidden">
           <motion.div className="h-full bg-accent" animate={{ width: `${(step / 4) * 100}%` }} transition={{ duration: 0.3 }} />
@@ -61,13 +64,7 @@ export default function CarbonForm() {
 
       <div className="min-h-[280px]">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 15 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -15 }}
-            transition={{ duration: 0.2 }}
-          >
+          <motion.div key={step} initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -15 }} transition={{ duration: 0.2 }}>
             {step === 1 && <TransportStep inputs={inputs.transport} onChange={handleInputChange} />}
             {step === 2 && <EnergyStep inputs={inputs.energy} onChange={handleInputChange} />}
             {step === 3 && <FoodStep inputs={inputs.food} onChange={handleInputChange} />}
@@ -78,32 +75,21 @@ export default function CarbonForm() {
 
       <div className="flex flex-col sm:flex-row justify-between items-center border-t border-accent/10 pt-6 mt-8 gap-4">
         <span className="text-xs text-textMuted">
-          Category Score: <span className="text-text font-bold font-mono">{partialScores[step].toLocaleString()} kg</span>
+          Category: <span className="text-text font-bold font-mono">{partialScores[step].toLocaleString()} kg</span>
         </span>
         <div className="flex space-x-4">
           {step > 1 && (
-            <button
-              type="button"
-              onClick={() => setStep(step - 1)}
-              className="px-5 py-2 rounded-lg bg-forestMuted text-text hover:bg-forestMuted/80 text-sm font-semibold transition"
-            >
+            <button type="button" onClick={() => setStep(step - 1)} className="px-5 py-2 rounded-lg bg-forestMuted text-text hover:bg-forestMuted/80 text-sm font-semibold transition">
               Back
             </button>
           )}
           {step < 4 ? (
-            <button
-              type="button"
-              onClick={() => setStep(step + 1)}
-              className="px-5 py-2 rounded-lg bg-accent text-background hover:opacity-90 text-sm font-bold transition"
-            >
+            <button type="button" onClick={() => setStep(step + 1)} className="px-5 py-2 rounded-lg bg-accent text-background hover:opacity-90 text-sm font-bold transition">
               Continue
             </button>
           ) : (
-            <button
-              type="submit"
-              className="px-6 py-2 rounded-lg bg-accent text-background hover:scale-105 active:scale-95 text-sm font-bold transition shadow-[0_0_15px_rgba(168,255,62,0.2)]"
-            >
-              Complete Analysis
+            <button type="submit" className="px-6 py-2 rounded-lg bg-accent text-background hover:scale-105 active:scale-95 text-sm font-bold transition shadow-[0_0_15px_rgba(168,255,62,0.2)]">
+              Complete
             </button>
           )}
         </div>

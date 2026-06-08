@@ -1,5 +1,10 @@
 # CarbonSense
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Next.js](https://img.shields.io/badge/Framework-Next.js%2014-black)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/CSS-Tailwind%20CSS-blue)](https://tailwindcss.com/)
+[![Tests Status](https://img.shields.io/badge/Tests-Passed-brightgreen)](https://jestjs.io/)
+
 **Vertical**: Environmental Awareness / Personal Carbon Tracking  
 **Aesthetic**: Dark, editorial, scientific (Bloomberg Terminal meets environmental NGO)
 
@@ -98,6 +103,34 @@ GEMINI_API_KEY=your_gemini_api_key_here
 npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## Testing
+
+CarbonSense includes a complete unit and integration test suite using **Jest** and **React Testing Library**.
+
+### Running Tests
+To run all tests once:
+```bash
+npm test
+```
+
+To run tests in watch mode during development:
+```bash
+npx jest --watch
+```
+
+To run tests with code coverage reports:
+```bash
+npm run test:coverage
+```
+
+### Test Coverage Areas
+1. **Emission Factors (`__tests__/emissionFactors.test.js`)**: Verifies calculations and formulas for transport, energy, food, and lifestyle inputs.
+2. **Calculator Logic (`__tests__/calculator.test.js`)**: Tests edge cases, zero/maximum inputs, diet multipliers, and flight class variables.
+3. **API Integration (`__tests__/gemini.test.js`)**: Mocks Gemini API routes, verifying request validation, security headers compliance, and generic error wrappers.
+4. **UI Components (`__tests__/components/Navbar.test.js`)**: Validates render structures and active states of components.
 
 ---
 

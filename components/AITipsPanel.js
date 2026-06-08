@@ -2,7 +2,15 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import AITipCard from "./AITipCard";
 
+/**
+ * AITipsPanel component.
+ * Invokes and displays personalized AI carbon-reduction tips from Gemini.
+ * @param {Object} props - React props.
+ * @param {Object} props.footprint - The carbon calculation state data.
+ * @returns {React.ReactElement} The AI insights layout block.
+ */
 export default function AITipsPanel({ footprint }) {
   const [tips, setTips] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,25 +35,6 @@ export default function AITipsPanel({ footprint }) {
     }
   };
 
-  const getCategoryColor = (cat) => {
-    const maps = {
-      Transport: "border-sky-500/20 text-sky-400 bg-sky-500/5",
-      Energy: "border-amber-500/20 text-amber-400 bg-amber-500/5",
-      Food: "border-emerald-500/20 text-emerald-400 bg-emerald-500/5",
-      Lifestyle: "border-purple-500/20 text-purple-400 bg-purple-500/5"
-    };
-    return maps[cat] || "border-accent/20 text-accent bg-accent/5";
-  };
-
-  const getDifficultyColor = (diff) => {
-    const maps = {
-      Easy: "border-emerald-500/20 text-emerald-400 bg-emerald-500/5",
-      Medium: "border-amber-500/20 text-amber-400 bg-amber-500/5",
-      Hard: "border-rose-500/20 text-rose-400 bg-rose-500/5"
-    };
-    return maps[diff] || "border-accent/20 text-accent bg-accent/5";
-  };
-
   return (
     <div className="w-full flex flex-col items-center mt-12 border-t border-accent/15 pt-12">
       <div className="text-center max-w-lg mb-8">
@@ -58,7 +47,7 @@ export default function AITipsPanel({ footprint }) {
       {tips.length === 0 && !loading && (
         <button
           onClick={fetchAITips}
-          className="px-8 py-3 rounded-full bg-accent text-background font-heading font-extrabold text-sm uppercase tracking-wider hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(168,255,62,0.2)] focus:outline-none focus:ring-4 focus:ring-accent/50"
+          className="px-8 py-3 rounded-full bg-accent text-background font-heading font-extrabold text-sm uppercase tracking-wider hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(168,255,62,0.2)] focus:outline-none"
         >
           Get AI Insights
         </button>
@@ -89,28 +78,7 @@ export default function AITipsPanel({ footprint }) {
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full"
         >
           {tips.map((tip, idx) => (
-            <motion.div
-              key={idx}
-              variants={{ hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0 } }}
-              className="glass-panel p-6 rounded-2xl border border-accent/10 flex flex-col justify-between hover:border-accent/30 transition-all duration-300"
-            >
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${getCategoryColor(tip.category)}`}>
-                    {tip.category}
-                  </span>
-                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${getDifficultyColor(tip.difficulty)}`}>
-                    {tip.difficulty}
-                  </span>
-                </div>
-                <h3 className="font-heading text-lg font-bold text-text mb-2 line-clamp-1">{tip.title}</h3>
-                <p className="text-xs text-textMuted font-body leading-relaxed line-clamp-4">{tip.description}</p>
-              </div>
-              <div className="border-t border-accent/5 pt-4 mt-4 flex justify-between items-center">
-                <span className="text-[10px] text-textMuted uppercase font-bold tracking-wider">Estimated Savings</span>
-                <span className="text-sm font-heading font-extrabold text-accent">-{tip.estimatedSaving.toLocaleString()} kg CO₂/yr</span>
-              </div>
-            </motion.div>
+            <AITipCard key={idx} tip={tip} />
           ))}
         </motion.div>
       )}

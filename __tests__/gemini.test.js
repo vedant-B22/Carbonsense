@@ -82,6 +82,6 @@ describe("Gemini API Route Tests", () => {
     expect(res.status).toBe(500);
 
     const json = await res.json();
-    expect(json.error).toBe("Gemini quota exceeded");
+    expect(json.error).toBe("Failed to generate personal AI recommendations.");
   });
 });

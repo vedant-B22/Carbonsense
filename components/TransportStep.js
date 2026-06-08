@@ -1,5 +1,14 @@
 import React from "react";
+import { INPUT_LIMITS } from "@/lib/constants";
 
+/**
+ * TransportStep component.
+ * Renders the transportation parameters section of the calculator form.
+ * @param {Object} props - React props.
+ * @param {Object} props.inputs - The transport inputs state values.
+ * @param {Function} props.onChange - Handles changes for input fields.
+ * @returns {React.ReactElement} The transport fields layout.
+ */
 export default function TransportStep({ inputs, onChange }) {
   return (
     <div className="space-y-6">
@@ -10,7 +19,8 @@ export default function TransportStep({ inputs, onChange }) {
           <input
             type="number"
             id="carKm"
-            min="0"
+            min={INPUT_LIMITS.transport.carKm.min}
+            max={INPUT_LIMITS.transport.carKm.max}
             className="w-full bg-forestMuted/60 border border-accent/10 focus:border-accent text-text rounded-lg px-4 py-2 focus:outline-none"
             value={inputs.carKmPerWeek || ""}
             onChange={(e) => onChange("transport", "carKmPerWeek", Number(e.target.value))}
@@ -21,7 +31,8 @@ export default function TransportStep({ inputs, onChange }) {
           <input
             type="number"
             id="publicHours"
-            min="0"
+            min={INPUT_LIMITS.transport.publicHours.min}
+            max={INPUT_LIMITS.transport.publicHours.max}
             className="w-full bg-forestMuted/60 border border-accent/10 focus:border-accent text-text rounded-lg px-4 py-2 focus:outline-none"
             value={inputs.publicHoursPerWeek || ""}
             onChange={(e) => onChange("transport", "publicHoursPerWeek", Number(e.target.value))}
@@ -32,7 +43,8 @@ export default function TransportStep({ inputs, onChange }) {
           <input
             type="number"
             id="flights"
-            min="0"
+            min={INPUT_LIMITS.transport.flights.min}
+            max={INPUT_LIMITS.transport.flights.max}
             className="w-full bg-forestMuted/60 border border-accent/10 focus:border-accent text-text rounded-lg px-4 py-2 focus:outline-none"
             value={inputs.flightsPerYear || ""}
             onChange={(e) => onChange("transport", "flightsPerYear", Number(e.target.value))}

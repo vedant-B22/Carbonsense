@@ -1,5 +1,14 @@
 import React from "react";
+import { INPUT_LIMITS } from "@/lib/constants";
 
+/**
+ * LifestyleStep component.
+ * Renders the lifestyle habits parameters section of the calculator form.
+ * @param {Object} props - React props.
+ * @param {Object} props.inputs - The lifestyle inputs state values.
+ * @param {Function} props.onChange - Handles changes for input fields.
+ * @returns {React.ReactElement} The lifestyle fields layout.
+ */
 export default function LifestyleStep({ inputs, onChange }) {
   return (
     <div className="space-y-6">
@@ -10,7 +19,8 @@ export default function LifestyleStep({ inputs, onChange }) {
           <input
             type="number"
             id="onlineOrders"
-            min="0"
+            min={INPUT_LIMITS.lifestyle.onlineOrders.min}
+            max={INPUT_LIMITS.lifestyle.onlineOrders.max}
             className="w-full bg-forestMuted/60 border border-accent/10 focus:border-accent text-text rounded-lg px-4 py-2 focus:outline-none"
             value={inputs.onlineOrdersPerMonth || ""}
             onChange={(e) => onChange("lifestyle", "onlineOrdersPerMonth", Number(e.target.value))}
@@ -21,9 +31,10 @@ export default function LifestyleStep({ inputs, onChange }) {
           <input
             type="number"
             id="streaming"
-            min="0"
+            min={INPUT_LIMITS.lifestyle.streaming.min}
+            max={INPUT_LIMITS.lifestyle.streaming.max}
             className="w-full bg-forestMuted/60 border border-accent/10 focus:border-accent text-text rounded-lg px-4 py-2 focus:outline-none"
-            value={inputs.streamingHoursPerDay || ""}
+            value={inputs.lifestyle.streamingHoursPerDay || ""}
             onChange={(e) => onChange("lifestyle", "streamingHoursPerDay", Number(e.target.value))}
           />
         </div>
@@ -32,7 +43,8 @@ export default function LifestyleStep({ inputs, onChange }) {
           <input
             type="number"
             id="clothing"
-            min="0"
+            min={INPUT_LIMITS.lifestyle.clothing.min}
+            max={INPUT_LIMITS.lifestyle.clothing.max}
             className="w-full bg-forestMuted/60 border border-accent/10 focus:border-accent text-text rounded-lg px-4 py-2 focus:outline-none"
             value={inputs.clothingPurchasesPerYear || ""}
             onChange={(e) => onChange("lifestyle", "clothingPurchasesPerYear", Number(e.target.value))}

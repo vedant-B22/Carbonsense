@@ -1,5 +1,14 @@
 import React from "react";
+import { INPUT_LIMITS } from "@/lib/constants";
 
+/**
+ * FoodStep component.
+ * Renders the food and diet parameters section of the calculator form.
+ * @param {Object} props - React props.
+ * @param {Object} props.inputs - The food inputs state values.
+ * @param {Function} props.onChange - Handles changes for input fields.
+ * @returns {React.ReactElement} The food fields layout.
+ */
 export default function FoodStep({ inputs, onChange }) {
   return (
     <div className="space-y-6">
@@ -37,8 +46,8 @@ export default function FoodStep({ inputs, onChange }) {
           <input
             type="range"
             id="localProduce"
-            min="0"
-            max="100"
+            min={INPUT_LIMITS.food.local.min}
+            max={INPUT_LIMITS.food.local.max}
             className="w-full accent-accent bg-forestMuted cursor-pointer"
             value={inputs.localPercentage}
             onChange={(e) => onChange("food", "localPercentage", Number(e.target.value))}

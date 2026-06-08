@@ -1,22 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { DEFAULT_FOOTPRINT } from "@/lib/constants";
 
 const GlobalContext = createContext(null);
-
-const DEFAULT_FOOTPRINT = {
-  transport: 0,
-  energy: 0,
-  food: 0,
-  lifestyle: 0,
-  total: 0,
-  inputs: {
-    transport: { carKmPerWeek: 0, publicHoursPerWeek: 0, flightsPerYear: 0, flightClass: "economy" },
-    energy: { electricityKwhPerMonth: 0, gasM3PerMonth: 0, renewablePercentage: 0, houseSizeM2: 0 },
-    food: { dietType: "average", wasteLevel: "medium", localPercentage: 0 },
-    lifestyle: { onlineOrdersPerMonth: 0, streamingHoursPerDay: 0, clothingPurchasesPerYear: 0, recyclingHabit: "partially" }
-  }
-};
 
 export function GlobalProvider({ children }) {
   const [footprint, setFootprint] = useState(DEFAULT_FOOTPRINT);
@@ -26,23 +13,24 @@ export function GlobalProvider({ children }) {
   // Load from localStorage on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedFootprint = localStorage.getItem("carbonsense_footprint");
-      const storedActions = localStorage.getItem("carbonsense_actions");
-
-      if (storedFootprint) {
-        try {
+      try {
+        const storedFootprint = localStorage.getItem("carbonsense_footprint");
+        if (storedFootprint) {
           setFootprint(JSON.parse(storedFootprint));
-        } catch (e) {
-          console.error("Error parsing stored footprint", e);
         }
+      } catch (e) {
+        /* eslint-disable-next-line no-console */
+        console.error("Error loading footprint from localStorage:", e);
       }
-      
-      if (storedActions) {
-        try {
+
+      try {
+        const storedActions = localStorage.getItem("carbonsense_actions");
+        if (storedActions) {
           setCompletedActions(JSON.parse(storedActions));
-        } catch (e) {
-          console.error("Error parsing stored actions", e);
         }
+      } catch (e) {
+        /* eslint-disable-next-line no-console */
+        console.error("Error loading actions from localStorage:", e);
       }
       setIsLoaded(true);
     }
@@ -52,7 +40,12 @@ export function GlobalProvider({ children }) {
   const updateFootprint = (newFootprint) => {
     setFootprint(newFootprint);
     if (typeof window !== "undefined") {
-      localStorage.setItem("carbonsense_footprint", JSON.stringify(newFootprint));
+      try {
+        localStorage.setItem("carbonsense_footprint", JSON.stringify(newFootprint));
+      } catch (e) {
+        /* eslint-disable-next-line no-console */
+        console.error("Error saving footprint to localStorage:", e);
+      }
     }
   };
 
@@ -60,7 +53,12 @@ export function GlobalProvider({ children }) {
   const updateCompletedActions = (newActions) => {
     setCompletedActions(newActions);
     if (typeof window !== "undefined") {
-      localStorage.setItem("carbonsense_actions", JSON.stringify(newActions));
+      try {
+        localStorage.setItem("carbonsense_actions", JSON.stringify(newActions));
+      } catch (e) {
+        /* eslint-disable-next-line no-console */
+        console.error("Error saving actions to localStorage:", e);
+      }
     }
   };
 
